@@ -6,10 +6,12 @@ def turn_right():
     turn_left()
     turn_left()
  
+ # Ensure the front is clear at first, adjusting direction
 while front_is_clear():
     move()
 turn_left()
-    
+
+# Movement of Reeborg to overcome obstacles
 while at_goal() is not True:
     if right_is_clear() == True:
         turn_right()
