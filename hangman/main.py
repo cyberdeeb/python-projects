@@ -6,14 +6,12 @@ from replit import clear
 # Initialize variables used
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
+used_letters = []
 end_of_game = False
 lives = 6
 
 # Print logo
 print(ha.logo)
-
-#Testing code
-print(f'Pssst, the solution is {chosen_word}.')
 
 # Loop to create "-"
 display = []
@@ -29,7 +27,7 @@ while not end_of_game:
     clear()
   
     # if user has entered a letter they've already guessed
-    if guess in display:
+    if guess in display or guess in used_letters:
       print(f'You have already guessed {guess}. Please try again.')
       
     # Check guessed letter and update display if matched
@@ -40,11 +38,13 @@ while not end_of_game:
 
     #Check if user is wrong.
     if guess not in chosen_word:
-        lives -= 1
-        print(f'{guess} is not in the word. You have {lives} lives left')
-        if lives == 0:
-            end_of_game = True
-            print("You lose!")
+      if guess not in used_letters:
+          used_letters.append(guess)
+          lives -= 1
+          print(f'{guess} is not in the word. You have {lives} lives left')
+      if lives == 0:
+          end_of_game = True
+          print("You lose!")
 
     #Join all the elements in the list and turn it into a string.
     print(f"{' '.join(display)}")
