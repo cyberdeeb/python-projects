@@ -1,4 +1,6 @@
 import random
+from art import logo
+from replit import clear
 
 ############### Blackjack Project #####################
 
@@ -40,12 +42,53 @@ user_cards = []
 computer_cards = []
 end_game = False
 
+def main(users_score, computers_score):
+  print(logo)
+  end_game = score_check()
+  
+  while True:
+    while not end_game:
+      print(f'Your cards: {user_cards}')
+      print(f'Your score: {users_score}')
+      draw_again = input("Would you like to draw another card? Input 'yes' or 'no'.\n" ).lower()
+      if draw_again == 'yes':
+        clear()
+        deal_card('user')
+        users_score = calculate_score(user_cards)
+        # There is a bug here where it does not stop the loop, it will repeat if greater than 21, review
+        end_game = score_check()
+      else:
+        clear()
+        while not end_game and computers_score < 17:
+          deal_card('computer')
+          computers_score = calculate_score(computer_cards)
+          end_game = score_check()
+        end_game = True
+    
+    print(f'Your cards: {user_cards}')
+    print(f'Your score: {users_score}')
+    
+    print(f'The computers cards: {computer_cards}')
+    print(f'The computers score: {computers_score}')
+
+    compare(users_score, computers_score)
+    
+    restart = input("Would you like to play again? Input 'yes' or 'no'.\n" ).lower()
+    if restart == 'yes':
+      clear()
+      print(logo)
+      main(users_score, computers_score)
+    else:
+      break
+  
+
+
 def deal_card(player):
   if player == 'user':
-    for i in range(2):
+    for i in range(1):
       user_cards.append(random.choice(cards))
   elif player == 'computer':
-    for i in range(2):
+    for i in range(1):
       computer_cards.append(random.choice(cards))
   elif player == 'both':
     for i in range(2):
@@ -63,26 +106,36 @@ def calculate_score(cards_held):
   if 11 in cards_held and score > 21:
     cards_held.remove(11)
     cards_held.append(1)
+    return sum(cards_held)
   else:
     return score
 
-deal_card('both')
+def score_check():
+  if users_score > 21 or users_score == 0 or computers_score == 0:
+    return True
 
-users_score = calculate_score([11,2])
+    
+#Hint 13: Create a function called compare() and pass in the user_score and computer_score. If the computer and user both have the same score, then it's a draw. If the computer has a blackjack (0), then the user loses. If the user has a blackjack (0), then the user wins. If the user_score is over 21, then the user loses. If the computer_score is over 21, then the computer loses. If none of the above, then the player with the highest score wins.
+def compare(users_score, computers_score):
+  if users_score > 21 or computers_score == 0:
+    print('The computer wins!')
+  elif computers_score > 21 or users_score == 0:
+    print('You win!')
+  elif users_score == computers_score:
+    print("It's a draw!")
+  else:
+    if users_score > computers_score:
+      print('You win!')
+    else:
+      print('The computer wins!')
+
+deal_card('both')
+  
+users_score = calculate_score(user_cards)
 computers_score = calculate_score(computer_cards)
 
-while not end_game:
-  print(users_score)
-  while users_score < 21 or users_score != 0 or computers_score != 0:
-    draw_again = input("Would you like to draw another card? Input 'yes' or 'no'.\n" ).lower()
-    if draw_again == 'yes':
-      deal_card('user')
-    else:
-      end_game = True
-    users_score = calculate_score(user_cards)
-    print(users_score)
-print('the game is over')
-#Hint 7: Inside calculate_score() check for a blackjack (a hand with only 2 cards: ace + 10) and return 0 instead of the actual score. 0 will represent a blackjack in our game.
+main(users_score, computers_score)
+  #Hint 7: Inside calculate_score() check for a blackjack (a hand with only 2 cards: ace + 10) and return 0 instead of the actual score. 0 will represent a blackjack in our game.
 
 #Hint 8: Inside calculate_score() check for an 11 (ace). If the score is already over 21, remove the 11 and replace it with a 1. You might need to look up append() and remove().
 
