@@ -34,6 +34,7 @@ def main():
                 break
         else:
             drink = menu.find_drink(order)
+            
         # Ensure that there are enough resources for order first and if not state what is missing
         if not coffee_machine.is_resource_sufficient(drink):
             end_program = True
@@ -42,8 +43,5 @@ def main():
 
             if money_machine.make_payment(cost):
                 coffee_machine.make_coffee(drink)
-
-        if end_program:
-            break
-
+                
 main()
