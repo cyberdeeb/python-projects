@@ -1,5 +1,6 @@
 import turtle as t
 
+# Constant variables
 Y = 0
 MOVE_DISTANCE = 20
 UP = 90
