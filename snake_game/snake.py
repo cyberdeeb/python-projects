@@ -1,8 +1,9 @@
 import turtle as t
 
 # Constant variables
-Y = 0
+POSITIONS = [(0, 0), (-20, 0), (-40, 0)]
 MOVE_DISTANCE = 20
+SPEED = 1
 UP = 90
 DOWN = 270
 LEFT = 180
@@ -12,20 +13,26 @@ RIGHT = 0
 class Snake:
     def __init__(self):
 
-        self.starting_x = 0
         self.snake_list = []
         self.create()
         self.head = self.snake_list[0]
 
     def create(self):
-        for turtle in range(4):
-            snake_segment = t.Turtle('square')
-            snake_segment.color('white')
-            snake_segment.speed('slowest')
-            snake_segment.penup()
-            snake_segment.setpos(self.starting_x, Y)
-            self.snake_list.append(snake_segment)
-            self.starting_x += 20
+        for position in POSITIONS:
+            self.add_segment(position)
+
+    def add_segment(self, position):
+        snake_segment = t.Turtle('square')
+        snake_segment.color('white')
+        snake_segment.speed(SPEED)
+        snake_segment.penup()
+        snake_segment.goto(position)
+        self.snake_list.append(snake_segment)
+
+    def extend(self):
+        self.add_segment(self.snake_list[-1].position())
+
+    #def level_up(self):
 
     def move(self):
         for segment in range(len(self.snake_list) - 1, 0, -1):
