@@ -1,4 +1,4 @@
-import csv
+import json
 import pyperclip
 import random
 from tkinter import *
@@ -35,25 +35,62 @@ def save():
     site = website_entry.get()
     user = eun_entry.get()
     pw = password_entry.get()
+    new_data = {
+        site: {
+            'email':user,
+            'password':pw
+        }
+    }
 
     # Ensure that fields are not blank
     if site == '' or pw == '' or user == '':
         # If blank then show this message box
-        messagebox.showwarning(title='Error', message="Please don't leave any feilds empty!")
+        messagebox.showwarning(title='Error', message="Please don't leave any fields empty!")
     else:
-        # If filled, then allow user to review
-        is_ok = messagebox.askokcancel(title=f'{site}', message=f'These are the details entered: \nEmail: {user} \nPassword: {pw} '
-                                               f'\nIs it ok to save?')
-        # Append data to CSV file
-        if is_ok:
-            with open('data.csv', mode='a') as file:
-                fieldnames = ['website', 'email/username', 'password']
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
-                writer.writerow({'website':site, 'email/username':user, 'password':pw})
+        # Check if file has been created & append data to JSON file:
+        try:
+            with open('data.json', mode='r') as file:
+                # Reading old data
+                data = json.load(file)
+        except FileNotFoundError:
+            with open('data.json', mode='w') as file:
+                json.dump(new_data, file, indent=4)
+        else:
+            # Updating file with new data
+            data.update(new_data)
+
+            # Saving the updated file
+            with open('data.json', mode='w') as file:
+                json.dump(data, file, indent=4)
 
             # Clear fields
-            website_entry.delete(0, END)
-            password_entry.delete(0, END)
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
+
+
+def find():
+
+    # Get the site the user is searching for
+    site = website_entry.get()
+
+    try:
+        with open('data.json', mode='r') as file:
+            # Reading data
+            data = json.load(file)
+    # If file doesn't exist
+    except FileNotFoundError:
+        messagebox.showwarning(title='Error', message="You haven't saved any passwords yet!")
+    else:
+        # Search through the loaded data
+        try:
+            password = data[site]['password']
+            email = data[site]['email']
+        # If search values do not exist
+        except KeyError:
+            messagebox.showwarning(title='Error', message=f"No details for {site} exist.")
+        # Pop up message providing details to the user
+        else:
+            messagebox.showinfo(title=f'{site}', message=f'Email: {email}\n Password: {password}')
 
 
 # UI Set Up
@@ -68,8 +105,8 @@ canvas.grid(column=1, row=0)
 
 website = Label(text='Website:')
 website.grid(column=0, row=1)
-website_entry = Entry(width=38)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=21)
+website_entry.grid(column=1, row=1)
 
 eun = Label(text='Email/Username:')
 eun.grid(column=0, row=2)
@@ -88,6 +125,9 @@ generate.grid(column=2, row=3)
 
 add = Button(text='Add', width=36, command=save)
 add.grid(column=1, row=4, columnspan=2)
+
+search = Button(text='Search', width=13, command=find)
+search.grid(column=2, row=1)
 
 
 window.mainloop()
