@@ -16,6 +16,7 @@ while True:
 
         # Translate each letter using nato_dict
         translate = [nato_dict[letter] for letter in letters]
+        
     except KeyError:
         print('Please only input words.')
     else:
