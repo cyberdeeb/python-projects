@@ -20,7 +20,7 @@ def main():
             connection.login(user=my_email, password=password)
             connection.sendmail(
                 from_addr=my_email,
-                to_addrs='abrahamdeeb@gmail.com',
+                to_addrs=my_email,
                 msg=f'Subject:Look Up!\n\n The ISS is right above you! Do you see it?'
             )
 
