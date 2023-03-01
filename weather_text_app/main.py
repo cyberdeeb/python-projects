@@ -16,7 +16,7 @@ def main():
             .create(
             body="It looks like it's going to rain today! Don't forget your jacket and ☔️",
             from_='+18446781985',
-            to='+17026838052'
+            to='NUMBER'
             )
 
     print(message.status)
