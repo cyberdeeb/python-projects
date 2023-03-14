@@ -1,24 +1,23 @@
+from nutrition_data import day, time, calories, duration, name
+import os
 import requests
 
+sheety_url = 'https://api.sheety.co/6ae4bde23162cc8bf92e1e8b6e96124c/fitnessTracker/workouts'
 
-APP_ID = ''
-API_KEY = ''
-fitness_url = 'https://trackapi.nutritionix.com/v2/natural/exercise'
-header = {
-    "x-app-id": APP_ID,
-    'x-app-key': API_KEY,
-    "x-remote-user-id": '0',
+# Bearer Token Authentication
+bearer_headers = {
+    "Authorization": os.getenv('AUTH')
 }
 
-workout = input('Tell me which exercises you did: ')
-
-params = {
-    "query": workout,
-    "gender": "female",
-    "weight_kg": 72.5,
-    "height_cm": 167.64,
-    "age": 30
+row_data = {
+    'workout': {
+        'date': day,
+        'time': time,
+        'exercise': name,
+        'duration': duration,
+        'calories': calories
+    }
 }
 
-response = requests.post(url=fitness_url, json=params, headers=header)
-print(response.text)
+response = requests.post(url=sheety_url, json=row_data, headers=bearer_headers)
+print(response.status_code, response.text)
