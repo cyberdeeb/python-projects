@@ -1,38 +1,21 @@
+from pprint import pprint
 import requests
 
-SHEETY_URL = 'https://api.sheety.co/6ae4bde23162cc8bf92e1e8b6e96124c/flightDeals/prices'
+SHEETY_PRICES_ENDPOINT = YOUR SHEETY PRICES ENDPOINT
+SHEETY_USERS_ENDPOINT = YOUR SHEETY USERS ENDPOINT
 
 class DataManager:
+
     def __init__(self):
         self.destination_data = {}
 
     def get_destination_data(self):
-
-        response = requests.get(url=SHEETY_URL)
+        response = requests.get(url=SHEETY_PRICES_ENDPOINT)
         data = response.json()
-        self.destination_data = data['prices']
+        self.destination_data = data["prices"]
         return self.destination_data
 
-    def get_codes(self):
-
-        for city in self.destination_data:
-
-            tequila_url = 'https://api.tequila.kiwi.com/locations/query'
-
-            header = {
-                'apikey': 'ozli_ecSPUgQOM1EPpLMHHYecV4ibJp-',
-            }
-
-            params = {
-                'term': city['city'],
-            }
-
-            response = requests.get(url=tequila_url, params=params, headers=header)
-            data = response.json()
-
-            city['iataCode'] = data['locations'][0]['code']
-
-    def update_codes(self):
+    def update_destination_codes(self):
         for city in self.destination_data:
             new_data = {
                 "price": {
@@ -40,7 +23,14 @@ class DataManager:
                 }
             }
             response = requests.put(
-                url=f"{SHEETY_URL}/{city['id']}",
+                url=f"{SHEETY_PRICES_ENDPOINT}/{city['id']}",
                 json=new_data
             )
             print(response.text)
+
+    def get_customer_emails(self):
+        customers_endpoint = SHEETY_USERS_ENDPOINT
+        response = requests.get(url=customers_endpoint)
+        data = response.json()
+        self.customer_data = data["users"]
+        return self.customer_data
