@@ -76,7 +76,7 @@ columns_to_drop = ['First Name', 'Last Name', 'Address', 'url']
 existing_columns_to_drop = [col for col in columns_to_drop if col in df.columns]
 df.drop(columns=existing_columns_to_drop, inplace=True)
 
-# Save the processed DataFrame to a new CSV file (adjust the relative path if needed)
+# Save the processed DataFrame to a new CSV file
 output_file_path = 'Processed_Campgrounds.csv'
 df.to_csv(output_file_path, index=False)
 
