@@ -31,6 +31,6 @@ def csv_to_vcf(csv_filename, output_dir):
             create_vcf(full_name, email, office, direct, output_dir)
 
 if __name__ == "__main__":
-    csv_filename = "contacts.csv"  # Change this to your actual CSV file path
+    csv_filename = "contacts.csv" 
     output_dir = "vcf_contacts"  # Directory where VCF files will be saved
     csv_to_vcf(csv_filename, output_dir)
